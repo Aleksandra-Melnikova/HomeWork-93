@@ -38,7 +38,7 @@ export class AlbumsController {
     @Body() albumDto: CreateAlbumDto,
   ) {
     const artist = await this.artistModel.findById(albumDto.artist);
-    if (!artist) throw new NotFoundError('Category not found');
+    if (!artist) throw new NotFoundError('Artist not found');
     const album = new this.albumModel({
       artist: albumDto.artist,
       title:albumDto.title,
@@ -57,7 +57,8 @@ export class AlbumsController {
   @Delete(':id')
   async deleteOne(@Param('id') id: string) {
     const artist = await this.albumModel.findById({ _id: id });
-    if (!artist) {throw new NotFoundError('Album not found');}
+    if (!artist) {
+      throw new NotFoundError('Album not found')}
     else{
       await this.albumModel.deleteOne({ _id: id });
     }
