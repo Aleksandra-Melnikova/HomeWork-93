@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 
-export type ArtistDocument = Track & Document;
+export type TrackDocument = Track & Document;
 
 @Schema()
 export class Track {
@@ -24,4 +24,3 @@ export class Track {
 }
 
 export const TrackSchema = SchemaFactory.createForClass(Track);
-

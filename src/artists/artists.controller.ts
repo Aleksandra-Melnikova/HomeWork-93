@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, UploadedFile, UseIntercepto
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Artist, ArtistDocument } from '../shemas/artist.schema';
-import { CreateArtistDto } from './create-product.dto';
+import { CreateArtistDto } from './create-artist.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { NotFoundError } from 'rxjs';
 
@@ -22,7 +22,6 @@ export class ArtistsController {
     if (!artist) throw new NotFoundError('Product not found');
     return artist;
   }
-
 
   @Post()
   @UseInterceptors(
