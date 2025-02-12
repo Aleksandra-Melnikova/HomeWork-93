@@ -25,17 +25,15 @@ export class TracksController {
 
   @Get()
   async get(@Query('album') album?: string) {
-    if(album){
+    if (album) {
       const albumOne = await this.albumModel.findById(album);
       if (!albumOne) {
         throw new NotFoundException('Album not found');
       } else {
         return this.trackModel.find({ album: album });
       }
-    }
-    else
-      return this.trackModel.find();
-    }
+    } else return this.trackModel.find();
+  }
 
   @Post()
   async create(@Body() trackDto: CreateTrackDto) {
