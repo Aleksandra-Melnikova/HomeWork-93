@@ -1,4 +1,3 @@
-import { Prop } from '@nestjs/mongoose';
 
 export class CreateTrackDto {
   album: string;

@@ -1,10 +1,20 @@
-import { Body, Controller, Delete, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Artist, ArtistDocument } from '../shemas/artist.schema';
 import { CreateArtistDto } from './create-artist.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { NotFoundError } from 'rxjs';
+import { diskStorage } from 'multer';
 
 @Controller('artists')
 export class ArtistsController {
@@ -19,13 +29,21 @@ export class ArtistsController {
   @Get(':id')
   async getOne(@Param('id') id: string) {
     const artist = await this.artistModel.findById({ _id: id });
-    if (!artist) throw new NotFoundError('Product not found');
+    if (!artist) throw new NotFoundException('Artist not found');
     return artist;
   }
 
   @Post()
   @UseInterceptors(
-    FileInterceptor('image', { dest: './public/uploads/artists/' }),
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './public/uploads/artists/',
+        filename: (req, file, cb) => {
+          const filename = file.originalname
+          cb(null, filename);
+        },
+      }),
+    }),
   )
   async create(
     @UploadedFile() file: Express.Multer.File,
@@ -34,14 +52,14 @@ export class ArtistsController {
       name: ArtistDto.name,
       description: ArtistDto.description,
       isPublished: ArtistDto.isPublished,
-      image: file ? '/uploads/artists/' + file.filename : null,
+      image: file ? '/uploads/artists/' + file.originalname: null,
     });
     return await artist.save();
   }
   @Delete(':id')
   async deleteOne(@Param('id') id: string) {
     const artist = await this.artistModel.findById({ _id: id });
-    if (!artist) {throw new NotFoundError('Product not found');}
+    if (!artist) {throw new NotFoundException('Artist not found');}
     else{
       await this.artistModel.deleteOne({ _id: id });
     }
