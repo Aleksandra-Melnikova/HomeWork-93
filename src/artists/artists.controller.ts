@@ -22,10 +22,12 @@ export class ArtistsController {
     @InjectModel(Artist.name)
     private artistModel: Model<ArtistDocument>,
   ) {}
+
   @Get()
   async getAll() {
     return this.artistModel.find();
   }
+
   @Get(':id')
   async getOne(@Param('id') id: string) {
     const artist = await this.artistModel.findById({ _id: id });
@@ -56,6 +58,7 @@ export class ArtistsController {
     });
     return await artist.save();
   }
+
   @Delete(':id')
   async deleteOne(@Param('id') id: string) {
     const artist = await this.artistModel.findById({ _id: id });

@@ -17,7 +17,6 @@ import { Artist, ArtistDocument } from '../shemas/artist.schema';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateAlbumDto } from './create-album.dto';
 import { diskStorage } from 'multer';
-import { NotFoundError } from 'rxjs';
 
 @Controller('albums')
 export class AlbumsController {
@@ -27,18 +26,18 @@ export class AlbumsController {
     @InjectModel(Artist.name)
     private artistModel: Model<ArtistDocument>,
   ) {}
-  @Get()
-  getAll() {
-    return this.albumModel.find();
-  }
 
   @Get()
-  async getQuery(@Query('artist') artist?: string){
-    const artistOne = await this.artistModel.findById(artist);
-    if (!artistOne ) {throw new NotFoundException('Artist not found');}
-    else{
-      return this.albumModel.find({artist: artist});
+  async get(@Query('artist') artist?: string) {
+    if(artist){
+      const artistOne = await this.artistModel.findById(artist);
+      if (!artistOne ) {throw new NotFoundException('Artist not found');}
+      else{
+        return this.albumModel.find({artist: artist});
+      }
     }
+    else
+      return this.albumModel.find();
   }
 
   @Post()
@@ -61,19 +60,21 @@ export class AlbumsController {
     if (!artist) throw new NotFoundException('Artist not found');
     const album = new this.albumModel({
       artist: albumDto.artist,
-      title:albumDto.title,
+      title: albumDto.title,
       year: albumDto.year,
       isPublished: albumDto.isPublished,
       image: file ? '/uploads/albums/' + file.originalname : null,
     });
     return album.save();
   }
+
   @Get(':id')
   async getOne(@Param('id') id: string) {
     const album = await this.albumModel.findById({ _id: id });
     if (!album) throw new NotFoundException('Album not found');
     return album;
   }
+
   @Delete(':id')
   async deleteOne(@Param('id') id: string) {
     const album = await this.albumModel.findById({ _id: id });

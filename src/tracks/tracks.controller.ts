@@ -2,7 +2,8 @@ import {
   Body,
   Controller,
   Delete,
-  Get, NotFoundException,
+  Get,
+  NotFoundException,
   Param,
   Post,
   Query,
@@ -21,41 +22,39 @@ export class TracksController {
     @InjectModel(Track.name)
     private trackModel: Model<TrackDocument>,
   ) {}
-  @Get()
-  getAll() {
-    return this.trackModel.find();
-  }
 
-  @Get('getQuery')
-  async getQuery(@Query('album') album?: string) {
-    const albumOne = await this.albumModel.findById(album);
-    if (!albumOne) {
-      throw new NotFoundException('Album not found');
-    } else {
-      return this.trackModel.find({ album: album });
+  @Get()
+  async get(@Query('album') album?: string) {
+    if(album){
+      const albumOne = await this.albumModel.findById(album);
+      if (!albumOne) {
+        throw new NotFoundException('Album not found');
+      } else {
+        return this.trackModel.find({ album: album });
+      }
     }
-  }
+    else
+      return this.trackModel.find();
+    }
 
   @Post()
   async create(@Body() trackDto: CreateTrackDto) {
     const albumOne = await this.albumModel.findById(trackDto.album);
-      if (!albumOne) {
-        throw new NotFoundException('Album not found');
-      }
-      else{
-        console.log(trackDto);
-        const track = new this.trackModel({
-          album: trackDto.album,
-          name: trackDto.name,
-          time: trackDto.time,
-          trackNumber: trackDto.trackNumber,
-          linkYouTube: trackDto.linkYouTube,
-          isPublished: trackDto.isPublished,
-        });
-        return await track.save();
-      }
+    if (!albumOne) {
+      throw new NotFoundException('Album not found');
+    } else {
+      console.log(trackDto);
+      const track = new this.trackModel({
+        album: trackDto.album,
+        name: trackDto.name,
+        time: trackDto.time,
+        trackNumber: trackDto.trackNumber,
+        linkYouTube: trackDto.linkYouTube,
+        isPublished: trackDto.isPublished,
+      });
+      return await track.save();
+    }
   }
-
 
   @Get(':id')
   async getOne(@Param('id') id: string) {
