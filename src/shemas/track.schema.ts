@@ -21,6 +21,7 @@ export class Track {
   linkYouTube: string;
   @Prop({ default: false })
   isPublished: boolean;
+  _id: string;
 }
 
 export const TrackSchema = SchemaFactory.createForClass(Track);

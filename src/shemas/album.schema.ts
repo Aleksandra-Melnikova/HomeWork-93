@@ -10,7 +10,7 @@ export class Album {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Artist',
   })
-  artist: string;
+  artist: mongoose.Schema.Types.ObjectId;
   @Prop({ required: true, unique: true })
   title: string;
   @Prop({ required: true })
@@ -19,6 +19,7 @@ export class Album {
   isPublished: boolean;
   @Prop({ default: null })
   image: string;
+  _id: string;
 }
 
 export const AlbumSchema = SchemaFactory.createForClass(Album);

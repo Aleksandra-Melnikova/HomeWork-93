@@ -29,15 +29,14 @@ export class AlbumsController {
 
   @Get()
   async get(@Query('artist') artist?: string) {
-    if(artist){
+    if (artist) {
       const artistOne = await this.artistModel.findById(artist);
-      if (!artistOne ) {throw new NotFoundException('Artist not found');}
-      else{
-        return this.albumModel.find({artist: artist});
+      if (!artistOne) {
+        throw new NotFoundException('Artist not found');
+      } else {
+        return this.albumModel.find({ artist: artist });
       }
-    }
-    else
-      return this.albumModel.find();
+    } else return this.albumModel.find();
   }
 
   @Post()
@@ -46,7 +45,7 @@ export class AlbumsController {
       storage: diskStorage({
         destination: './public/uploads/albums/',
         filename: (req, file, cb) => {
-          const filename = file.originalname
+          const filename = file.originalname;
           cb(null, filename);
         },
       }),
@@ -79,10 +78,10 @@ export class AlbumsController {
   async deleteOne(@Param('id') id: string) {
     const album = await this.albumModel.findById({ _id: id });
     if (!album) {
-      throw new NotFoundException('Album not found')}
-    else{
+      throw new NotFoundException('Album not found');
+    } else {
       await this.albumModel.deleteOne({ _id: id });
     }
-    return (`Album with id ${id} has been deleted`);
+    return `Album with id ${id} has been deleted`;
   }
 }

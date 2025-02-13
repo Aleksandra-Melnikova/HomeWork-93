@@ -13,6 +13,7 @@ export class Artist {
   description: string;
   @Prop({ default: false })
   isPublished: boolean;
+  _id: string;
 }
 
 export const ArtistSchema = SchemaFactory.createForClass(Artist);

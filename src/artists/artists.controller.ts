@@ -41,7 +41,7 @@ export class ArtistsController {
       storage: diskStorage({
         destination: './public/uploads/artists/',
         filename: (req, file, cb) => {
-          const filename = file.originalname
+          const filename = file.originalname;
           cb(null, filename);
         },
       }),
@@ -49,12 +49,13 @@ export class ArtistsController {
   )
   async create(
     @UploadedFile() file: Express.Multer.File,
-    @Body() ArtistDto: CreateArtistDto) {
+    @Body() ArtistDto: CreateArtistDto,
+  ) {
     const artist = new this.artistModel({
       name: ArtistDto.name,
       description: ArtistDto.description,
       isPublished: ArtistDto.isPublished,
-      image: file ? '/uploads/artists/' + file.originalname: null,
+      image: file ? '/uploads/artists/' + file.originalname : null,
     });
     return await artist.save();
   }
@@ -62,10 +63,11 @@ export class ArtistsController {
   @Delete(':id')
   async deleteOne(@Param('id') id: string) {
     const artist = await this.artistModel.findById({ _id: id });
-    if (!artist) {throw new NotFoundException('Artist not found');}
-    else{
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
+    } else {
       await this.artistModel.deleteOne({ _id: id });
     }
-    return (`Artist with id ${id} has been deleted`);
+    return `Artist with id ${id} has been deleted`;
   }
 }
