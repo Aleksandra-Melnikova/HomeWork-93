@@ -5,6 +5,7 @@ import { Album } from './shemas/album.schema';
 import { Track } from './shemas/track.schema';
 import { Artist } from './shemas/artist.schema';
 import { User } from './shemas/user.schema';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class FixturesService {
@@ -34,7 +35,9 @@ export class FixturesService {
       InhaleAlbum,
       SlowsAlbum,
     );
-    // const [Ivan, Maria] = await this.createUsers();
+
+    await this.createUsers();
+
   }
 
   private async clearCollections() {
@@ -303,6 +306,24 @@ export class FixturesService {
         trackNumber: 1,
         linkYouTube: 'https://www.youtube.com/watch?v=B2WtDYCJRvQ',
         isPublished: false,
+      },
+    ]);
+  }
+  private async createUsers() {
+    return this.userModel.create([
+      {
+        email: 'ivan@example.com',
+        password: '123',
+        token: randomUUID(),
+        displayName: 'Ivan Ivanov',
+        role: 'admin',
+      },
+      {
+        email: 'maria@example.com',
+        password: '123',
+        token: randomUUID(),
+        displayName: 'Maria Sydorova',
+        role: 'user',
       },
     ]);
   }

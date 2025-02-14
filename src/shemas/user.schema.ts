@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { randomUUID } from 'crypto';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 export interface UserDocument extends Document {
   email: string;
@@ -27,6 +27,8 @@ export class User {
   token: string;
   @Prop()
   displayName: string;
+  @Prop({default: 'user'})
+  role: 'user' | 'admin';
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
