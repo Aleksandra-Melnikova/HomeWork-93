@@ -10,6 +10,7 @@ import { AlbumsController } from './albums/albums.controller';
 import { TracksController } from './tracks/tracks.controller';
 import { Track, TrackSchema } from './shemas/track.schema';
 import { FixturesService } from './fixtures';
+import { User, UserSchema } from './shemas/user.schema';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { FixturesService } from './fixtures';
       { name: Artist.name, schema: ArtistSchema },
       { name: Album.name, schema: AlbumSchema },
       { name: Track.name, schema: TrackSchema },
+      { name: User.name, schema: UserSchema },
     ]),
   ],
   controllers: [

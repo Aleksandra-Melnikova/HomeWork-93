@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Album } from './shemas/album.schema';
 import { Track } from './shemas/track.schema';
 import { Artist } from './shemas/artist.schema';
+import { User } from './shemas/user.schema';
 
 @Injectable()
 export class FixturesService {
@@ -11,6 +12,7 @@ export class FixturesService {
     @InjectModel(Album.name) private albumModel: Model<Album>,
     @InjectModel(Track.name) private trackModel: Model<Track>,
     @InjectModel(Artist.name) private artistModel: Model<Artist>,
+    @InjectModel(User.name) private userModel: Model<User>,
   ) {}
 
   async createFixtures() {
@@ -32,6 +34,7 @@ export class FixturesService {
       InhaleAlbum,
       SlowsAlbum,
     );
+    // const [Ivan, Maria] = await this.createUsers();
   }
 
   private async clearCollections() {
@@ -39,6 +42,7 @@ export class FixturesService {
       await this.artistModel.deleteMany({});
       await this.albumModel.deleteMany({});
       await this.trackModel.deleteMany({});
+      await this.userModel.deleteMany({});
     } catch (error) {
       console.log('Error clearing collections:', error);
     }
