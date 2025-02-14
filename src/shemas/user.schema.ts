@@ -27,7 +27,7 @@ export class User {
   token: string;
   @Prop()
   displayName: string;
-  @Prop({default: 'user'})
+  @Prop({ default: 'user' })
   role: 'user' | 'admin';
 }
 
