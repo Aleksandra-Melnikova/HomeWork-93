@@ -6,13 +6,14 @@ import {
   NotFoundException,
   Param,
   Post,
-  Query,
+  Query,UseGuards,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Album, AlbumDocument } from '../shemas/album.schema';
 import { Model } from 'mongoose';
 import { Track, TrackDocument } from '../shemas/track.schema';
 import { CreateTrackDto } from './create-track.dto';
+import { TokenAuthGuard } from '../token-auth/token-auth.guard';
 
 @Controller('tracks')
 export class TracksController {
@@ -35,13 +36,13 @@ export class TracksController {
     } else return this.trackModel.find();
   }
 
+  @UseGuards(TokenAuthGuard)
   @Post()
   async create(@Body() trackDto: CreateTrackDto) {
     const albumOne = await this.albumModel.findById(trackDto.album);
     if (!albumOne) {
       throw new NotFoundException('Album not found');
     } else {
-      console.log(trackDto);
       const track = new this.trackModel({
         album: trackDto.album,
         name: trackDto.name,
