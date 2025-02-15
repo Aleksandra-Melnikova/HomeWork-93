@@ -37,7 +37,6 @@ export class FixturesService {
     );
 
     await this.createUsers();
-
   }
 
   private async clearCollections() {

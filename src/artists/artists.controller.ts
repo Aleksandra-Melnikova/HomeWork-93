@@ -6,7 +6,8 @@ import {
   NotFoundException,
   Param,
   Post,
-  UploadedFile, UseGuards,
+  UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { Model } from 'mongoose';
@@ -16,6 +17,8 @@ import { CreateArtistDto } from './create-artist.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { TokenAuthGuard } from '../token-auth/token-auth.guard';
+import { Roles } from '../roles/roles.decorator';
+import { RolesGuard } from '../roles/roles.guard';
 
 @Controller('artists')
 export class ArtistsController {
@@ -62,6 +65,8 @@ export class ArtistsController {
     return await artist.save();
   }
 
+  @UseGuards(TokenAuthGuard, RolesGuard)
+  @Roles('admin')
   @Delete(':id')
   async deleteOne(@Param('id') id: string) {
     const artist = await this.artistModel.findById({ _id: id });

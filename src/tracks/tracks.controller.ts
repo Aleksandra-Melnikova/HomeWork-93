@@ -6,7 +6,8 @@ import {
   NotFoundException,
   Param,
   Post,
-  Query,UseGuards,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Album, AlbumDocument } from '../shemas/album.schema';
@@ -14,6 +15,8 @@ import { Model } from 'mongoose';
 import { Track, TrackDocument } from '../shemas/track.schema';
 import { CreateTrackDto } from './create-track.dto';
 import { TokenAuthGuard } from '../token-auth/token-auth.guard';
+import { Roles } from '../roles/roles.decorator';
+import { RolesGuard } from '../roles/roles.guard';
 
 @Controller('tracks')
 export class TracksController {
@@ -61,7 +64,10 @@ export class TracksController {
     if (!track) throw new NotFoundException('Track not found');
     return track;
   }
+
+  @UseGuards(TokenAuthGuard, RolesGuard)
   @Delete(':id')
+  @Roles('admin')
   async deleteOne(@Param('id') id: string) {
     const track = await this.trackModel.findById({ _id: id });
     if (!track) {

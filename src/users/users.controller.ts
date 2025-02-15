@@ -10,6 +10,7 @@ import { TokenAuthGuard } from '../token-auth/token-auth.guard';
 @Controller('users')
 export class UsersController {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+
   @Post()
   registerUser(@Body() registerUserDto: RegisterUserDto) {
     const user: UserDocument = new this.userModel({
@@ -27,13 +28,12 @@ export class UsersController {
     return req.user;
   }
 
-
   @UseGuards(TokenAuthGuard)
   @Delete('sessions')
   async logout(@Req() req: Request<{ user: UserDocument }>) {
     const userFromAuth = req.user as UserDocument;
     userFromAuth.generateToken();
     await userFromAuth.save();
-    return { user: userFromAuth, message: "Success logout" };
-  }}
-
+    return { user: userFromAuth, message: 'Success logout' };
+  }
+}

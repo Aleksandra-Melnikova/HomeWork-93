@@ -8,6 +8,7 @@ export interface UserDocument extends Document {
   password: string;
   displayName?: string;
   token: string;
+  role: string;
   generateToken: () => void;
   checkPassword: (password: string) => Promise<boolean>;
 }
