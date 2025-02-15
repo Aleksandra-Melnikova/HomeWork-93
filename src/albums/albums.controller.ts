@@ -21,6 +21,7 @@ import { diskStorage } from 'multer';
 import { TokenAuthGuard } from '../token-auth/token-auth.guard';
 import { Roles } from '../roles/roles.decorator';
 import { RolesGuard } from '../roles/roles.guard';
+import { Track } from '../shemas/track.schema';
 
 @Controller('albums')
 export class AlbumsController {
@@ -29,6 +30,8 @@ export class AlbumsController {
     private albumModel: Model<AlbumDocument>,
     @InjectModel(Artist.name)
     private artistModel: Model<ArtistDocument>,
+    @InjectModel(Track.name)
+    private trackModel: Model<ArtistDocument>,
   ) {}
 
   @Get()
@@ -88,7 +91,8 @@ export class AlbumsController {
       throw new NotFoundException('Album not found');
     } else {
       await this.albumModel.deleteOne({ _id: id });
+      await this.trackModel.deleteMany({ album: id });
     }
-    return `Album with id ${id} has been deleted`;
+    return `Album with id ${id} has been deleted. All tracks this album have also been deleted.`;
   }
 }
